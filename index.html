@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recursive Sequences - Lab Activity #4</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .main-container {
+      width: 500px;
+      margin: 0 auto;
+      background-color: white;
+      border: 2px solid #999;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 16px 0;
+    }
+
+    /* MENU */
+    #menu-screen h2 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .menu-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      text-align: left;
+      background-color: #e8e8e8;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .menu-btn:hover {
+      background-color: #d5e8ff;
+      border-color: #88b;
+    }
+
+    .menu-btn.exit {
+      background-color: #ffe0e0;
+      border-color: #c88;
+    }
+
+    .menu-btn.exit:hover {
+      background-color: #ffc8c8;
+    }
+
+    /* SEQUENCE SCREEN */
+    #seq-screen {
+      display: none;
+    }
+
+    #seq-screen h2 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .info-box {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-left: 4px solid #4a90d9;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      border-radius: 4px;
+    }
+
+    .info-box .formula {
+      font-weight: bold;
+      color: #2255aa;
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    label {
+      font-size: 13px;
+      display: block;
+      margin-bottom: 4px;
+      color: #333;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 7px 10px;
+      font-size: 14px;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    button.compute {
+      padding: 8px 18px;
+      font-size: 13px;
+      background-color: #4a90d9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.compute:hover {
+      background-color: #2f72bb;
+    }
+
+    button.back {
+      padding: 8px 14px;
+      font-size: 13px;
+      background-color: #e0e0e0;
+      color: #333;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.back:hover {
+      background-color: #ccc;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-bottom: 8px;
+      display: none;
+    }
+
+    .result-box {
+      display: none;
+      background-color: #f0f7ff;
+      border: 1px solid #aac;
+      border-radius: 4px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .result-box .result-label {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .result-box .terms {
+      word-break: break-all;
+      color: #1a4d99;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+
+    /* Exit screen */
+    #exit-screen {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    #exit-screen p {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 14px;
+    }
+
+    #exit-screen button {
+      padding: 8px 20px;
+      font-size: 13px;
+      background-color: #e0e0e0;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #exit-screen button:hover {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+  <h1>Finals Lab Activity #4</h1>
+  <div class="subtitle">LABORATORY GROUP ACTIVITY</div>
+  <hr>
+
+  <!-- MAIN MENU -->
+  <div id="menu-screen">
+    <h2>Select a sequence to compute:</h2>
+    <button class="menu-btn" onclick="openSeq('fib')">1. Fibonacci Numbers</button>
+    <button class="menu-btn" onclick="openSeq('luc')">2. Lucas Numbers</button>
+    <button class="menu-btn" onclick="openSeq('tri')">3. Tribonacci Numbers</button>
+    <hr>
+    <button class="menu-btn exit" onclick="openExit()">4. Exit</button>
+  </div>
+
+  <!-- SEQUENCE SCREEN -->
+  <div id="seq-screen">
+    <h2 id="seq-title"></h2>
+
+    <div class="info-box" id="seq-info"></div>
+
+    <label id="input-label">Enter number of terms:</label>
+    <input type="number" id="num-input" min="1" placeholder="Enter a number">
+    <div class="error" id="error-msg"></div>
+
+    <div class="btn-row">
+      <button class="compute" onclick="compute()">Compute</button>
+      <button class="back" onclick="goBack()">&#8592; Back to Menu</button>
+    </div>
+
+    <div class="result-box" id="result-box">
+      <div class="result-label" id="result-label"></div>
+      <div class="terms" id="result-terms"></div>
+    </div>
+  </div>
+
+  <!-- EXIT SCREEN -->
+  <div id="exit-screen">
+    <p>Thank you for using this program. Goodbye!</p>
+    <button onclick="goBack()">Go Back to Menu</button>
+  </div>
+
+</div>
+
+<script>
+  const sequences = {
+    fib: {
+      title: "Fibonacci Numbers",
+      info: "The Fibonacci sequence is a series of numbers where each term is the sum of the two preceding terms. It was introduced by Italian mathematician Leonardo Fibonacci.<br><br><span class='formula'>Formula: F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub><br>Starting values: F<sub>0</sub> = 0, F<sub>1</sub> = 1</span>",
+      minTerms: 3,
+      hint: "Input must be greater than 2.",
+      generate(n) {
+        let seq = [0, 1];
+        for (let i = 2; i < n; i++) seq.push(seq[i-1] + seq[i-2]);
+        return seq.slice(0, n);
+      }
+    },
+    luc: {
+      title: "Lucas Numbers",
+      info: "Lucas numbers follow the same recurrence rule as Fibonacci numbers but start with different values. They were named after French mathematician Edouard Lucas.<br><br><span class='formula'>Formula: L<sub>n</sub> = L<sub>n-1</sub> + L<sub>n-2</sub><br>Starting values: L<sub>0</sub> = 2, L<sub>1</sub> = 1</span>",
+      minTerms: 3,
+      hint: "Input must be greater than 2.",
+      generate(n) {
+        let seq = [2, 1];
+        for (let i = 2; i < n; i++) seq.push(seq[i-1] + seq[i-2]);
+        return seq.slice(0, n);
+      }
+    },
+    tri: {
+      title: "Tribonacci Numbers",
+      info: "Tribonacci numbers are similar to Fibonacci but each term is the sum of the three preceding terms instead of two. The name comes from 'tri' meaning three.<br><br><span class='formula'>Formula: T<sub>n</sub> = T<sub>n-1</sub> + T<sub>n-2</sub> + T<sub>n-3</sub><br>Starting values: T<sub>0</sub> = 0, T<sub>1</sub> = 0, T<sub>2</sub> = 1</span>",
+      minTerms: 4,
+      hint: "Input must be greater than 3.",
+      generate(n) {
+        let seq = [0, 0, 1];
+        for (let i = 3; i < n; i++) seq.push(seq[i-1] + seq[i-2] + seq[i-3]);
+        return seq.slice(0, n);
+      }
+    }
+  };
+
+  let current = null;
+
+  function openSeq(key) {
+    current = key;
+    const data = sequences[key];
+
+    document.getElementById('seq-title').textContent = data.title;
+    document.getElementById('seq-info').innerHTML = data.info;
+    document.getElementById('input-label').textContent = "Enter number of terms: (" + data.hint + ")";
+    document.getElementById('num-input').value = '';
+    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('result-box').style.display = 'none';
+
+    document.getElementById('menu-screen').style.display = 'none';
+    document.getElementById('exit-screen').style.display = 'none';
+    document.getElementById('seq-screen').style.display = 'block';
+  }
+
+  function compute() {
+    const data = sequences[current];
+    const raw = document.getElementById('num-input').value.trim();
+    const n = parseInt(raw);
+    const errEl = document.getElementById('error-msg');
+
+    errEl.style.display = 'none';
+    document.getElementById('result-box').style.display = 'none';
+
+    if (raw === '' || isNaN(n)) {
+      errEl.textContent = 'Please enter a number.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (n < data.minTerms) {
+      errEl.textContent = 'Invalid input. ' + data.hint;
+      errEl.style.display = 'block';
+      return;
+    }
+    if (n > 80) {
+      errEl.textContent = 'Please enter a value of 80 or less.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const terms = data.generate(n);
+
+    document.getElementById('result-label').textContent =
+      'This program will find all the terms of the ' + data.title + '.';
+    document.getElementById('result-terms').textContent =
+      'Input the number of terms: ' + n + '\nThe ' + data.title + ' are: ' + terms.join(', ');
+
+    document.getElementById('result-box').style.display = 'block';
+  }
+
+  function goBack() {
+    document.getElementById('seq-screen').style.display = 'none';
+    document.getElementById('exit-screen').style.display = 'none';
+    document.getElementById('menu-screen').style.display = 'block';
+    current = null;
+  }
+
+  function openExit() {
+    document.getElementById('menu-screen').style.display = 'none';
+    document.getElementById('exit-screen').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
