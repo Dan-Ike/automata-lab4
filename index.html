@@ -2,371 +2,542 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab Activities - Finals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 20px;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0a1628;
+      --navy2:     #0d1f3c;
+      --navy3:     #112244;
+      --blue:      #1a3a6e;
+      --accent:    #2e7dd1;
+      --accent2:   #4a9aea;
+      --light:     #dceeff;
+      --muted:     #7ba8d4;
+      --white:     #f0f6ff;
+      --border:    rgba(74,154,234,0.22);
+      --glow:      rgba(46,125,209,0.18);
     }
 
-    .main-container {
-      width: 540px;
-      margin: 0 auto;
-      background-color: white;
-      border: 2px solid #999;
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 20px;
-      color: #333;
-      margin-bottom: 4px;
-    }
-
-    .subtitle {
-      text-align: center;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid #ccc;
-      margin: 16px 0;
-    }
-
-    /* MENU */
-    #menu-screen h2 {
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Source Sans 3', sans-serif;
       font-size: 15px;
-      margin-bottom: 12px;
-      color: #333;
+      overflow-x: hidden;
     }
 
-    .menu-section-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: #888;
+    /* subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(46,125,209,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(46,125,209,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      padding: 28px 0 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 700;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 10px 0 6px 0;
+      color: var(--white);
+    }
+
+    .header h1 span {
+      color: var(--accent2);
+    }
+
+    .header .sub {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .members-block {
+      margin-top: 14px;
+      background: rgba(26,58,110,0.45);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 18px;
+      text-align: left;
+    }
+
+    .members-block .mem-title {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .members-block ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px 16px;
+    }
+
+    .members-block ul li {
+      font-size: 12.5px;
+      color: var(--light);
+      padding: 2px 0;
+      font-weight: 300;
+    }
+
+    .members-block ul li::before {
+      content: '▸ ';
+      color: var(--accent);
+      font-size: 10px;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.32s ease, transform 0.32s ease;
+    }
+
+    .screen.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── MENU ── */
+    .menu-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
     }
 
     .menu-btn {
-      display: block;
+      display: flex;
+      align-items: center;
       width: 100%;
-      padding: 10px;
+      padding: 13px 18px;
       margin-bottom: 8px;
       font-size: 14px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 500;
       text-align: left;
-      background-color: #e8e8e8;
-      border: 1px solid #bbb;
-      border-radius: 4px;
+      background: rgba(17,34,68,0.7);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       cursor: pointer;
-      box-sizing: border-box;
+      color: var(--light);
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-btn::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
     }
 
     .menu-btn:hover {
-      background-color: #d5e8ff;
-      border-color: #88b;
+      background: rgba(46,125,209,0.14);
+      border-color: rgba(74,154,234,0.5);
+      transform: translateX(3px);
     }
 
-    .menu-btn.exit {
-      background-color: #ffe0e0;
-      border-color: #c88;
+    .menu-btn:hover::before { opacity: 1; }
+
+    .menu-btn .num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      color: var(--accent2);
+      min-width: 22px;
+      font-weight: 600;
     }
 
-    .menu-btn.exit:hover {
-      background-color: #ffc8c8;
+    .menu-btn.exit-btn {
+      background: rgba(140,30,30,0.18);
+      border-color: rgba(200,80,80,0.2);
+      color: #f4b8b8;
     }
 
-    /* SEQUENCE / ACTIVITY SCREEN */
-    #seq-screen {
-      display: none;
+    .menu-btn.exit-btn:hover {
+      background: rgba(180,40,40,0.28);
+      border-color: rgba(220,100,100,0.4);
     }
 
-    #seq-screen h2 {
-      font-size: 16px;
-      color: #333;
-      margin-bottom: 8px;
+    .menu-btn.exit-btn::before { background: #c05050; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 14px 0;
+    }
+
+    /* ── ACTIVITY SCREEN ── */
+    .act-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(18px, 4.5vw, 24px);
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--white);
+      margin-bottom: 14px;
     }
 
     .info-box {
-      background-color: #f9f9f9;
-      border: 1px solid #ccc;
-      border-left: 4px solid #4a90d9;
-      padding: 10px 14px;
+      background: rgba(17,34,68,0.6);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 16px;
       font-size: 13px;
-      color: #444;
-      line-height: 1.6;
-      margin-bottom: 16px;
-      border-radius: 4px;
+      color: #b8d4f0;
+      line-height: 1.7;
+      margin-bottom: 18px;
     }
 
     .info-box .formula {
-      font-weight: bold;
-      color: #2255aa;
-      margin-top: 6px;
-      font-size: 13px;
+      margin-top: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent2);
+      letter-spacing: 0.5px;
     }
 
-    label {
-      font-size: 13px;
-      display: block;
-      margin-bottom: 4px;
-      color: #333;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .input-row input {
-      flex: 1;
+    .field-label {
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
     }
 
     input[type="number"] {
       width: 100%;
-      padding: 7px 10px;
-      font-size: 14px;
-      border: 1px solid #bbb;
-      border-radius: 4px;
-      box-sizing: border-box;
-      margin-bottom: 8px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: 'Source Sans 3', sans-serif;
+      background: rgba(10,22,40,0.7);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--white);
+      outline: none;
+      margin-bottom: 12px;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .input-group {
-      margin-bottom: 4px;
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(46,125,209,0.15);
     }
 
-    .input-group label {
-      margin-bottom: 2px;
-    }
-
-    .input-group input {
-      margin-bottom: 0;
-    }
+    input[type="number"]::placeholder { color: #3d5a80; }
 
     .btn-row {
       display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      margin-top: 8px;
+      gap: 10px;
+      margin: 4px 0 16px;
+      flex-wrap: wrap;
     }
 
-    button.compute {
-      padding: 8px 18px;
-      font-size: 13px;
-      background-color: #4a90d9;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button.compute:hover {
-      background-color: #2f72bb;
-    }
-
-    button.back {
-      padding: 8px 14px;
-      font-size: 13px;
-      background-color: #e0e0e0;
-      color: #333;
-      border: 1px solid #bbb;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button.back:hover {
-      background-color: #ccc;
-    }
-
-    .error {
-      color: red;
-      font-size: 12px;
-      margin-bottom: 8px;
-      display: none;
-    }
-
-    .result-box {
-      display: none;
-      background-color: #f0f7ff;
-      border: 1px solid #aac;
-      border-radius: 4px;
-      padding: 12px 14px;
-      font-size: 13px;
-      color: #333;
-    }
-
-    .result-box .result-label {
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
-
-    .result-box .terms {
-      word-break: break-all;
-      color: #1a4d99;
-      font-family: "Courier New", monospace;
-      font-size: 13px;
-      white-space: pre-wrap;
-    }
-
-    /* Exit screen */
-    #exit-screen {
-      display: none;
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    #exit-screen p {
+    .btn-compute {
+      padding: 10px 26px;
       font-size: 14px;
-      color: #444;
-      margin-bottom: 14px;
-    }
-
-    #exit-screen button {
-      padding: 8px 20px;
-      font-size: 13px;
-      background-color: #e0e0e0;
-      border: 1px solid #bbb;
-      border-radius: 4px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
       cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 2px 16px rgba(46,125,209,0.3);
     }
 
-    #exit-screen button:hover {
-      background-color: #ccc;
+    .btn-compute:hover {
+      background: var(--accent2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 22px rgba(46,125,209,0.45);
+    }
+
+    .btn-back {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(17,34,68,0.6);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-back:hover {
+      background: rgba(46,125,209,0.1);
+      color: var(--light);
+    }
+
+    .error-msg {
+      display: none;
+      font-size: 12.5px;
+      color: #f08080;
+      background: rgba(180,30,30,0.15);
+      border: 1px solid rgba(200,60,60,0.25);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+
+    /* ── OUTPUT PANELS ── */
+    .output-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      margin-top: 6px;
+    }
+
+    .output-panel.visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .panel-block {
+      background: rgba(13,31,60,0.7);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .panel-block .panel-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-block pre {
+      font-family: 'Rajdhani', monospace;
+      font-size: 13.5px;
+      color: var(--light);
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .panel-block.solution-panel {
+      border-left: 3px solid rgba(74,210,140,0.5);
+    }
+
+    .panel-block.solution-panel pre {
+      color: #b8f0d8;
+    }
+
+    .panel-block.solution-panel .panel-title {
+      color: #6fd4a8;
+    }
+
+    .panel-block.explain-panel {
+      border-left: 3px solid rgba(255,190,80,0.5);
+      background: rgba(50,35,10,0.35);
+    }
+
+    .panel-block.explain-panel .panel-title {
+      color: #f0c46a;
+    }
+
+    .panel-block.explain-panel p {
+      font-size: 13.5px;
+      color: #f0ddb0;
+      line-height: 1.75;
+    }
+
+    /* ── EXIT SCREEN ── */
+    .exit-content {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .exit-content .bye {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent2);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .exit-content p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 480px) {
+      .app { padding: 0 12px 32px; }
+      .members-block ul { grid-template-columns: 1fr; }
+      .btn-row { flex-direction: column; }
+      .btn-compute, .btn-back { width: 100%; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-<div class="main-container">
-  <h1>Finals Lab Activities</h1>
-  <div class="subtitle">LABORATORY GROUP ACTIVITY</div>
-  <hr>
+<div class="app">
 
-  <!-- MAIN MENU -->
-  <div id="menu-screen">
-    <h2>Select an activity:</h2>
-    <button class="menu-btn" onclick="openActivity('fib')">1. Fibonacci Numbers</button>
-    <button class="menu-btn" onclick="openActivity('luc')">2. Lucas Numbers</button>
-    <button class="menu-btn" onclick="openActivity('tri')">3. Tribonacci Numbers</button>
+  <!-- HEADER (always visible) -->
+  <div class="header">
+    <h1>Finals <span>Lab</span> Activities</h1>
+    <div class="sub">Laboratory Group Activity</div>
+    <div class="members-block">
+      <div class="mem-title">Members</div>
+      <ul>
+        <li>Bambico, Shaine Angelou</li>
+        <li>Camacho, Mark Kirby</li>
+        <li>Estoque, Dan Ike Kresler</li>
+        <li>Estrella, Christian</li>
+        <li>Linan, Mike Jefferson</li>
+      </ul>
+    </div>
+  </div>
 
-    <button class="menu-btn" onclick="openActivity('div')">4. Division Algorithm</button>
-    <button class="menu-btn" onclick="openActivity('euc')">5. Euclidean Algorithm (GCD & LCM)</button>
-    <button class="menu-btn" onclick="openActivity('col')">6. Collatz Conjecture</button>
+  <!-- MENU -->
+  <div id="menu-screen" class="screen active">
+    <div class="menu-label">Select an activity</div>
 
-    <hr>
-    <button class="menu-btn exit" onclick="openExit()">7. Exit</button>
+    <button class="menu-btn" onclick="openActivity('div')">
+      <span class="num">01&nbsp;&nbsp;</span> Division Algorithm
+    </button>
+    <button class="menu-btn" onclick="openActivity('euc')">
+      <span class="num">02&nbsp;&nbsp;</span> Euclidean Algorithm (GCD &amp; LCM)
+    </button>
+    <button class="menu-btn" onclick="openActivity('col')">
+      <span class="num">03&nbsp;&nbsp;</span> Collatz Conjecture
+    </button>
+    <button class="menu-btn" onclick="openActivity('fib')">
+      <span class="num">04&nbsp;&nbsp;</span> Fibonacci Numbers
+    </button>
+    <button class="menu-btn" onclick="openActivity('luc')">
+      <span class="num">05&nbsp;&nbsp;</span> Lucas Numbers
+    </button>
+    <button class="menu-btn" onclick="openActivity('tri')">
+      <span class="num">06&nbsp;&nbsp;</span> Tribonacci Numbers
+    </button>
+
+    <hr class="divider">
+    <button class="menu-btn exit-btn" onclick="openExit()">
+      <span class="num">07&nbsp;&nbsp;</span> Exit
+    </button>
   </div>
 
   <!-- ACTIVITY SCREEN -->
-  <div id="seq-screen">
-    <h2 id="seq-title"></h2>
+  <div id="seq-screen" class="screen">
+    <div class="act-title" id="seq-title"></div>
     <div class="info-box" id="seq-info"></div>
 
-    <!-- Single-input activities -->
     <div id="single-input-area">
-      <label id="input-label">Enter number of terms:</label>
+      <div class="field-label" id="input-label">Number of Terms</div>
       <input type="number" id="num-input" min="1" placeholder="Enter a number">
     </div>
 
-    <!-- Two-input activities -->
     <div id="two-input-area" style="display:none;">
-      <div class="input-group">
-        <label id="label-a">First integer:</label>
-        <input type="number" id="input-a" min="1" placeholder="Enter first integer">
-      </div>
-      <div class="input-group">
-        <label id="label-b">Second integer:</label>
-        <input type="number" id="input-b" min="1" placeholder="Enter second integer">
-      </div>
+      <div class="field-label" id="label-a">First Integer</div>
+      <input type="number" id="input-a" min="1" placeholder="Enter first integer">
+      <div class="field-label" id="label-b">Second Integer</div>
+      <input type="number" id="input-b" min="1" placeholder="Enter second integer">
     </div>
 
-    <div class="error" id="error-msg"></div>
+    <div class="error-msg" id="error-msg"></div>
 
     <div class="btn-row">
-      <button class="compute" onclick="compute()">Compute</button>
-      <button class="back" onclick="goBack()">&#8592; Back to Menu</button>
+      <button class="btn-compute" onclick="compute()">Compute</button>
+      <button class="btn-back" onclick="goBack()">&#8592; Back to Menu</button>
     </div>
 
-    <div class="result-box" id="result-box">
-      <div class="result-label" id="result-label"></div>
-      <div class="terms" id="result-terms"></div>
+    <!-- Result -->
+    <div class="output-panel" id="result-panel">
+      <div class="panel-block">
+        <div class="panel-title" id="result-label">Result</div>
+        <pre id="result-terms"></pre>
+      </div>
+      <div class="panel-block solution-panel">
+        <div class="panel-title">Step-by-step Solution</div>
+        <pre id="solution-steps"></pre>
+      </div>
+      <div class="panel-block explain-panel">
+        <div class="panel-title">&#9654; Explanation</div>
+        <p id="explanation-text"></p>
+      </div>
     </div>
   </div>
 
   <!-- EXIT SCREEN -->
-  <div id="exit-screen">
-    <p>Thank you for using this program. Goodbye!</p>
-    <button onclick="goBack()">Go Back to Menu</button>
+  <div id="exit-screen" class="screen">
+    <div class="exit-content">
+      <div class="bye">Goodbye!</div>
+      <p>Thank you for using the Finals Lab Activities program.</p>
+      <button class="btn-back" onclick="goBack()">&#8592; Go Back to Menu</button>
+    </div>
   </div>
 
 </div>
 
 <script>
+  /* ── ACTIVITIES ── */
   const activities = {
 
-    /* ── RECURSIVE SEQUENCES ── */
-    fib: {
-      title: "Fibonacci Numbers",
-      type: "single",
-      info: "The Fibonacci sequence is a series of numbers where each term is the sum of the two preceding terms. It was introduced by Italian mathematician Leonardo Fibonacci.<br><br><span class='formula'>Formula: F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub><br>Starting values: F<sub>0</sub> = 0, F<sub>1</sub> = 1</span>",
-      minTerms: 3,
-      hint: "Input must be greater than 2.",
-      run(n) {
-        let seq = [0, 1];
-        for (let i = 2; i < n; i++) seq.push(seq[i-1] + seq[i-2]);
-        seq = seq.slice(0, n);
-        return {
-          label: "This program will find all the terms of the Fibonacci Numbers.",
-          output: "Input the number of terms: " + n + "\nThe Fibonacci Numbers are: " + seq.join(", ")
-        };
-      }
-    },
-
-    luc: {
-      title: "Lucas Numbers",
-      type: "single",
-      info: "Lucas numbers follow the same recurrence rule as Fibonacci numbers but start with different values. They were named after French mathematician Edouard Lucas.<br><br><span class='formula'>Formula: L<sub>n</sub> = L<sub>n-1</sub> + L<sub>n-2</sub><br>Starting values: L<sub>0</sub> = 2, L<sub>1</sub> = 1</span>",
-      minTerms: 3,
-      hint: "Input must be greater than 2.",
-      run(n) {
-        let seq = [2, 1];
-        for (let i = 2; i < n; i++) seq.push(seq[i-1] + seq[i-2]);
-        seq = seq.slice(0, n);
-        return {
-          label: "This program will find all the terms of the Lucas Numbers.",
-          output: "Input the number of terms: " + n + "\nThe Lucas Numbers are: " + seq.join(", ")
-        };
-      }
-    },
-
-    tri: {
-      title: "Tribonacci Numbers",
-      type: "single",
-      info: "Tribonacci numbers are similar to Fibonacci but each term is the sum of the three preceding terms instead of two. The name comes from 'tri' meaning three.<br><br><span class='formula'>Formula: T<sub>n</sub> = T<sub>n-1</sub> + T<sub>n-2</sub> + T<sub>n-3</sub><br>Starting values: T<sub>0</sub> = 0, T<sub>1</sub> = 0, T<sub>2</sub> = 1</span>",
-      minTerms: 4,
-      hint: "Input must be greater than 3.",
-      run(n) {
-        let seq = [0, 0, 1];
-        for (let i = 3; i < n; i++) seq.push(seq[i-1] + seq[i-2] + seq[i-3]);
-        seq = seq.slice(0, n);
-        return {
-          label: "This program will find all the terms of the Tribonacci Numbers.",
-          output: "Input the number of terms: " + n + "\nThe Tribonacci Numbers are: " + seq.join(", ")
-        };
-      }
-    },
-
-    /* ── NUMBER THEORY ── */
     div: {
       title: "Division Algorithm",
       type: "two",
@@ -377,19 +548,41 @@
         const q = Math.floor(dividend / divisor);
         const r = dividend % divisor;
 
-        const lines = [
+        const output = [
           "SOLUTION:",
-          dividend + " = " + divisor + " (" + q + ") + " + r,
+          `${dividend} = ${divisor}(${q}) + ${r}`,
           "",
-          "The dividend is " + dividend,
-          "The divisor is " + divisor,
-          "The quotient is " + q + " and the remainder is " + r
-        ];
+          `Dividend   : ${dividend}`,
+          `Divisor    : ${divisor}`,
+          `Quotient   : ${q}`,
+          `Remainder  : ${r}`
+        ].join("\n");
 
-        return {
-          label: "Division Algorithm Result:",
-          output: lines.join("\n")
-        };
+        const solution = [
+          "Formula: m = n·q + r",
+          "",
+          `Given: ${a} and ${b}`,
+          `  → Larger  = dividend (m) = ${dividend}`,
+          `  → Smaller = divisor  (n) = ${divisor}`,
+          "",
+          `Step 1: Divide ${dividend} by ${divisor}`,
+          `  ${dividend} ÷ ${divisor} = ${q} remainder ${r}`,
+          "",
+          `Step 2: Write as m = n·q + r`,
+          `  ${dividend} = ${divisor}(${q}) + ${r}`,
+          "",
+          `Step 3: Verify`,
+          `  ${divisor} × ${q} = ${divisor * q}`,
+          `  ${divisor * q} + ${r} = ${divisor * q + r} ✓`,
+          "",
+          `∴ Quotient = ${q}, Remainder = ${r}`
+        ].join("\n");
+
+        const explain = r === 0
+          ? `We divided ${dividend} by ${divisor} and found that it goes in evenly ${q} time${q!==1?'s':''} with no remainder left over. This means ${divisor} is a factor of ${dividend}, and the equation ${dividend} = ${divisor}×${q} + 0 holds perfectly.`
+          : `We divided ${dividend} by ${divisor}. The divisor fits into the dividend ${q} time${q!==1?'s':''}, accounting for ${divisor * q} in total. The leftover amount — the part that cannot be divided further — is the remainder ${r}. We confirm this by computing ${divisor} × ${q} = ${divisor * q}, and adding the remainder: ${divisor * q} + ${r} = ${dividend}. The Division Algorithm guarantees this breakdown is always possible and always unique.`;
+
+        return { label: "Division Algorithm Result", output, solution, explain };
       }
     },
 
@@ -398,165 +591,267 @@
       type: "two",
       info: "The Euclidean Algorithm finds the GCD of two integers by iterating the Division Algorithm until the remainder is zero. The last non-zero remainder is the GCD. The LCM is then found using the relationship between GCD and LCM.<br><br><span class='formula'>gcd(m, n) = last non-zero remainder<br>lcm(m, n) = (m · n) / gcd(m, n)</span>",
       run(a, b) {
-        let m = Math.max(a, b);
-        let n = Math.min(a, b);
+        let m = Math.max(a, b), n = Math.min(a, b);
         const origM = m, origN = n;
+        const outputSteps = [];
+        const solutionLines = [
+          "Apply the Division Algorithm repeatedly until remainder = 0.",
+          "The last non-zero remainder is the GCD.",
+          "",
+          `Given: ${origM} and ${origN}`, ""
+        ];
 
-        const steps = [];
+        let step = 1;
         while (n !== 0) {
           const q = Math.floor(m / n);
           const r = m % n;
-          if (r === 0) {
-            steps.push(m + " = " + n + " (" + q + ")");
-          } else {
-            steps.push(m + " = " + n + "(" + q + ") + " + r);
-          }
-          m = n;
-          n = r;
+          outputSteps.push(r === 0
+            ? `${m} = ${n}(${q})`
+            : `${m} = ${n}(${q}) + ${r}`);
+          solutionLines.push(
+            `Step ${step}: Divide ${m} by ${n}`,
+            `  ${m} ÷ ${n} = ${q} remainder ${r}`,
+            r === 0
+              ? `  → Remainder is 0. STOP.`
+              : `  → New dividend = ${n}, New divisor = ${r}`,
+            ""
+          );
+          m = n; n = r; step++;
         }
+
         const gcd = m;
         const lcm = (origM * origN) / gcd;
 
-        const lines = [
-          "SOLUTION:",
-          ...steps,
+        solutionLines.push(
+          `∴ GCD = ${gcd}`,
           "",
-          "The integers are " + origM + " and " + origN,
-          "The greatest common divisor of " + origM + " and " + origN + " is " + gcd,
-          "The least common multiple of " + origM + " and " + origN + " is " + lcm + "."
-        ];
+          `LCM: (${origM} × ${origN}) / ${gcd} = ${origM * origN} / ${gcd} = ${lcm}`
+        );
 
-        return {
-          label: "Euclidean Algorithm Result:",
-          output: lines.join("\n")
-        };
+        const output = [
+          "SOLUTION:",
+          ...outputSteps, "",
+          `Integers : ${origM} and ${origN}`,
+          `GCD      : ${gcd}`,
+          `LCM      : ${lcm}`
+        ].join("\n");
+
+        const explain = `We repeatedly applied the Division Algorithm, each time replacing the dividend with the divisor and the divisor with the remainder. After ${step - 1} step${step-1!==1?'s':''}, the remainder became 0, meaning the previous divisor — ${gcd} — divides both ${origM} and ${origN} perfectly. That is the GCD. For the LCM, we used the relationship lcm(m, n) = (m × n) / gcd(m, n): multiplying ${origM} × ${origN} = ${origM * origN}, then dividing by ${gcd} gives LCM = ${lcm}. This approach is efficient even for very large numbers.`;
+
+        return { label: "Euclidean Algorithm Result", output, solution: solutionLines.join("\n"), explain };
       }
     },
 
     col: {
       title: "Collatz Conjecture",
       type: "single",
-      info: "The Collatz Conjecture (also called the 3n+1 problem) states that starting from any positive integer, repeatedly applying the rule below will always eventually reach 1. It remains unproven for all integers.<br><br><span class='formula'>If n is even: n = n / 2<br>If n is odd:  n = 3n + 1<br>Repeat until n = 1</span>",
+      info: "The Collatz Conjecture states that starting from any positive integer, repeatedly applying the rule below will always eventually reach 1. It remains unproven for all integers.<br><br><span class='formula'>If n is even: n = n / 2<br>If n is odd:  n = 3n + 1<br>Repeat until n = 1</span>",
       minTerms: 2,
       hint: "Input must be a positive integer greater than 1.",
       run(n) {
         const seq = [n];
-        let current = n;
-        while (current !== 1) {
-          current = current % 2 === 0 ? current / 2 : 3 * current + 1;
-          seq.push(current);
+        const solutionLines = [
+          "Rule: even → n / 2 | odd → 3n + 1",
+          "",
+          `Starting value: ${n}`, ""
+        ];
+        let cur = n, step = 1;
+        while (cur !== 1) {
+          if (cur % 2 === 0) {
+            const next = cur / 2;
+            solutionLines.push(`Step ${step}: ${cur} is even  →  ${cur} / 2 = ${next}`);
+            cur = next;
+          } else {
+            const next = 3 * cur + 1;
+            solutionLines.push(`Step ${step}: ${cur} is odd   →  3(${cur}) + 1 = ${next}`);
+            cur = next;
+          }
+          seq.push(cur); step++;
         }
+        solutionLines.push("", "Reached 1! Sequence terminates.");
+
+        const maxVal = Math.max(...seq);
+        const explain = `Starting from ${n}, the Collatz rules were applied ${seq.length - 1} time${seq.length-1!==1?'s':''} before reaching 1. Along the way the sequence climbed as high as ${maxVal} before eventually falling back down to 1. The Collatz Conjecture claims this will happen for every positive integer — no matter how high or erratically the sequence bounces, it always ends at 1. Despite being simple to state and easy to test, mathematicians have never found a proof that this holds for all possible starting values.`;
+
         return {
-          label: "This program will compute the Collatz sequence.",
-          output: "Starting value: " + n +
-                  "\nNumber of steps to reach 1: " + (seq.length - 1) +
-                  "\nSequence: " + seq.join(", ")
+          label: "Collatz Conjecture Result",
+          output: `Starting value    : ${n}\nSteps to reach 1  : ${seq.length - 1}\nSequence          : ${seq.join(", ")}`,
+          solution: solutionLines.join("\n"),
+          explain
+        };
+      }
+    },
+
+    fib: {
+      title: "Fibonacci Numbers",
+      type: "single",
+      info: "The Fibonacci sequence is a series of numbers where each term is the sum of the two preceding terms, introduced by Italian mathematician Leonardo Fibonacci.<br><br><span class='formula'>Formula: F(n) = F(n-1) + F(n-2)<br>Starting values: F(0) = 0, F(1) = 1</span>",
+      minTerms: 3,
+      hint: "Input must be greater than 2.",
+      run(n) {
+        let seq = [0, 1];
+        const steps = ["Starting: F(0) = 0, F(1) = 1", ""];
+        for (let i = 2; i < n; i++) {
+          const val = seq[i-1] + seq[i-2];
+          seq.push(val);
+          steps.push(`F(${i}) = ${seq[i-2]} + ${seq[i-1]} = ${val}`);
+        }
+        seq = seq.slice(0, n);
+        const explain = `Each term in the Fibonacci sequence is simply the sum of the two terms that came before it. Starting from 0 and 1, every new number grows by combining its two predecessors. This creates a rapidly increasing series (0, 1, 1, 2, 3, 5, 8, …) where the ratio between consecutive terms approaches the famous Golden Ratio (~1.618). Fibonacci numbers appear throughout nature — in spiral shells, flower petals, pine cones, and branching patterns — making this one of the most celebrated sequences in mathematics.`;
+        return {
+          label: "Fibonacci Numbers",
+          output: `Number of terms    : ${n}\nFibonacci Numbers  : ${seq.join(", ")}`,
+          solution: steps.join("\n"),
+          explain
+        };
+      }
+    },
+
+    luc: {
+      title: "Lucas Numbers",
+      type: "single",
+      info: "Lucas numbers follow the same recurrence as Fibonacci but start with different values. Named after French mathematician Édouard Lucas.<br><br><span class='formula'>Formula: L(n) = L(n-1) + L(n-2)<br>Starting values: L(0) = 2, L(1) = 1</span>",
+      minTerms: 3,
+      hint: "Input must be greater than 2.",
+      run(n) {
+        let seq = [2, 1];
+        const steps = ["Starting: L(0) = 2, L(1) = 1", ""];
+        for (let i = 2; i < n; i++) {
+          const val = seq[i-1] + seq[i-2];
+          seq.push(val);
+          steps.push(`L(${i}) = ${seq[i-2]} + ${seq[i-1]} = ${val}`);
+        }
+        seq = seq.slice(0, n);
+        const explain = `Lucas numbers use the exact same rule as Fibonacci — each term is the sum of the previous two — but they start from 2 and 1 instead of 0 and 1. This small difference in starting values produces a completely different sequence (2, 1, 3, 4, 7, 11, 18, …), yet the two sequences are deeply connected: each Lucas number equals the sum of the Fibonacci number two positions ahead and two positions behind it. Like Fibonacci, consecutive Lucas terms also approach the Golden Ratio as they grow.`;
+        return {
+          label: "Lucas Numbers",
+          output: `Number of terms  : ${n}\nLucas Numbers    : ${seq.join(", ")}`,
+          solution: steps.join("\n"),
+          explain
+        };
+      }
+    },
+
+    tri: {
+      title: "Tribonacci Numbers",
+      type: "single",
+      info: "Tribonacci numbers are like Fibonacci but each term is the sum of the three preceding terms. The name comes from 'tri' meaning three.<br><br><span class='formula'>Formula: T(n) = T(n-1) + T(n-2) + T(n-3)<br>Starting values: T(0) = 0, T(1) = 0, T(2) = 1</span>",
+      minTerms: 4,
+      hint: "Input must be greater than 3.",
+      run(n) {
+        let seq = [0, 0, 1];
+        const steps = ["Starting: T(0) = 0, T(1) = 0, T(2) = 1", ""];
+        for (let i = 3; i < n; i++) {
+          const val = seq[i-1] + seq[i-2] + seq[i-3];
+          seq.push(val);
+          steps.push(`T(${i}) = ${seq[i-3]} + ${seq[i-2]} + ${seq[i-1]} = ${val}`);
+        }
+        seq = seq.slice(0, n);
+        const explain = `The Tribonacci sequence extends Fibonacci's idea by summing three previous terms instead of two. Starting from 0, 0, 1, each new number is the total of the three numbers just before it (0, 0, 1, 1, 2, 4, 7, 13, …). Because more terms contribute to each step, the sequence grows faster than Fibonacci. Just as Fibonacci terms approach the Golden Ratio, Tribonacci terms approach the Tribonacci Constant (~1.839), a lesser-known but equally interesting mathematical constant.`;
+        return {
+          label: "Tribonacci Numbers",
+          output: `Number of terms      : ${n}\nTribonacci Numbers   : ${seq.join(", ")}`,
+          solution: steps.join("\n"),
+          explain
         };
       }
     }
   };
 
+  /* ── SCREEN TRANSITION ── */
   let current = null;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.remove('active');
+      s.style.display = 'none';
+    });
+    const el = document.getElementById(id);
+    el.style.display = 'block';
+    // force reflow then animate
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => el.classList.add('active'));
+    });
+  }
 
   function openActivity(key) {
     current = key;
     const data = activities[key];
-
     document.getElementById('seq-title').textContent = data.title;
     document.getElementById('seq-info').innerHTML = data.info;
     document.getElementById('error-msg').style.display = 'none';
-    document.getElementById('result-box').style.display = 'none';
+    hideOutput();
 
-    const isSingle = data.type === "single";
+    const isSingle = data.type === 'single';
     document.getElementById('single-input-area').style.display = isSingle ? 'block' : 'none';
-    document.getElementById('two-input-area').style.display  = isSingle ? 'none' : 'block';
+    document.getElementById('two-input-area').style.display   = isSingle ? 'none'  : 'block';
 
     if (isSingle) {
-      document.getElementById('input-label').textContent =
-        "Enter number of terms: (" + data.hint + ")";
+      document.getElementById('input-label').textContent = `Number of terms — (${data.hint})`;
       document.getElementById('num-input').value = '';
     } else {
       document.getElementById('input-a').value = '';
       document.getElementById('input-b').value = '';
     }
 
-    document.getElementById('menu-screen').style.display = 'none';
-    document.getElementById('exit-screen').style.display = 'none';
-    document.getElementById('seq-screen').style.display = 'block';
+    showScreen('seq-screen');
   }
 
   function compute() {
     const data = activities[current];
     const errEl = document.getElementById('error-msg');
     errEl.style.display = 'none';
-    document.getElementById('result-box').style.display = 'none';
+    hideOutput();
 
     let result;
 
     if (data.type === 'single') {
       const raw = document.getElementById('num-input').value.trim();
       const n = parseInt(raw);
-
-      if (raw === '' || isNaN(n)) {
-        errEl.textContent = 'Please enter a number.';
-        errEl.style.display = 'block';
-        return;
-      }
-      if (n < data.minTerms) {
-        errEl.textContent = 'Invalid input. ' + data.hint;
-        errEl.style.display = 'block';
-        return;
-      }
-      if (current !== 'col' && n > 80) {
-        errEl.textContent = 'Please enter a value of 80 or less.';
-        errEl.style.display = 'block';
-        return;
-      }
-      if (current === 'col' && n > 100000) {
-        errEl.textContent = 'Please enter a value of 100,000 or less.';
-        errEl.style.display = 'block';
-        return;
-      }
-
+      if (raw === '' || isNaN(n)) { return showErr('Please enter a number.'); }
+      if (n < data.minTerms) { return showErr('Invalid input. ' + data.hint); }
+      if (current !== 'col' && n > 80) { return showErr('Please enter a value of 80 or less.'); }
+      if (current === 'col' && n > 100000) { return showErr('Please enter a value of 100,000 or less.'); }
       result = data.run(n);
-
     } else {
       const rawA = document.getElementById('input-a').value.trim();
       const rawB = document.getElementById('input-b').value.trim();
-      const a = parseInt(rawA);
-      const b = parseInt(rawB);
-
-      if (rawA === '' || isNaN(a) || rawB === '' || isNaN(b)) {
-        errEl.textContent = 'Please enter both integers.';
-        errEl.style.display = 'block';
-        return;
-      }
-      if (a < 1 || b < 1) {
-        errEl.textContent = 'Both integers must be positive (greater than 0).';
-        errEl.style.display = 'block';
-        return;
-      }
-
+      const a = parseInt(rawA), b = parseInt(rawB);
+      if (rawA === '' || isNaN(a) || rawB === '' || isNaN(b)) { return showErr('Please enter both integers.'); }
+      if (a < 1 || b < 1) { return showErr('Both integers must be positive (greater than 0).'); }
       result = data.run(a, b);
     }
 
     document.getElementById('result-label').textContent = result.label;
-    document.getElementById('result-terms').textContent  = result.output;
-    document.getElementById('result-box').style.display  = 'block';
+    document.getElementById('result-terms').textContent = result.output;
+    document.getElementById('solution-steps').textContent = result.solution;
+    document.getElementById('explanation-text').textContent = result.explain;
+
+    const panel = document.getElementById('result-panel');
+    panel.style.display = 'block';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => panel.classList.add('visible'));
+    });
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function goBack() {
-    document.getElementById('seq-screen').style.display  = 'none';
-    document.getElementById('exit-screen').style.display = 'none';
-    document.getElementById('menu-screen').style.display = 'block';
-    current = null;
+  function showErr(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
   }
 
-  function openExit() {
-    document.getElementById('menu-screen').style.display = 'none';
-    document.getElementById('exit-screen').style.display = 'block';
+  function hideOutput() {
+    const panel = document.getElementById('result-panel');
+    panel.classList.remove('visible');
+    panel.style.display = 'none';
   }
+
+  function goBack() { showScreen('menu-screen'); current = null; }
+  function openExit() { showScreen('exit-screen'); }
+
+  // init
+  showScreen('menu-screen');
 </script>
-
 </body>
 </html>
