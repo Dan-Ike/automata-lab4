@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Recursive Sequences - Lab Activity #4</title>
+  <title>Lab Activities - Finals</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
     }
 
     .main-container {
-      width: 500px;
+      width: 540px;
       margin: 0 auto;
       background-color: white;
       border: 2px solid #999;
@@ -47,6 +47,15 @@
       color: #333;
     }
 
+    .menu-section-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 10px 0 6px 0;
+    }
+
     .menu-btn {
       display: block;
       width: 100%;
@@ -58,6 +67,7 @@
       border: 1px solid #bbb;
       border-radius: 4px;
       cursor: pointer;
+      box-sizing: border-box;
     }
 
     .menu-btn:hover {
@@ -74,7 +84,7 @@
       background-color: #ffc8c8;
     }
 
-    /* SEQUENCE SCREEN */
+    /* SEQUENCE / ACTIVITY SCREEN */
     #seq-screen {
       display: none;
     }
@@ -111,6 +121,16 @@
       color: #333;
     }
 
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .input-row input {
+      flex: 1;
+    }
+
     input[type="number"] {
       width: 100%;
       padding: 7px 10px;
@@ -121,10 +141,23 @@
       margin-bottom: 8px;
     }
 
+    .input-group {
+      margin-bottom: 4px;
+    }
+
+    .input-group label {
+      margin-bottom: 2px;
+    }
+
+    .input-group input {
+      margin-bottom: 0;
+    }
+
     .btn-row {
       display: flex;
       gap: 8px;
       margin-bottom: 12px;
+      margin-top: 8px;
     }
 
     button.compute {
@@ -215,28 +248,48 @@
 <body>
 
 <div class="main-container">
-  <h1>Finals Lab Activity #4</h1>
+  <h1>Finals Lab Activities</h1>
   <div class="subtitle">LABORATORY GROUP ACTIVITY</div>
   <hr>
 
   <!-- MAIN MENU -->
   <div id="menu-screen">
-    <h2>Select a sequence to compute:</h2>
-    <button class="menu-btn" onclick="openSeq('fib')">1. Fibonacci Numbers</button>
-    <button class="menu-btn" onclick="openSeq('luc')">2. Lucas Numbers</button>
-    <button class="menu-btn" onclick="openSeq('tri')">3. Tribonacci Numbers</button>
+    <h2>Select an activity:</h2>
+    <button class="menu-btn" onclick="openActivity('fib')">1. Fibonacci Numbers</button>
+    <button class="menu-btn" onclick="openActivity('luc')">2. Lucas Numbers</button>
+    <button class="menu-btn" onclick="openActivity('tri')">3. Tribonacci Numbers</button>
+
+    <button class="menu-btn" onclick="openActivity('div')">4. Division Algorithm</button>
+    <button class="menu-btn" onclick="openActivity('euc')">5. Euclidean Algorithm (GCD & LCM)</button>
+    <button class="menu-btn" onclick="openActivity('col')">6. Collatz Conjecture</button>
+
     <hr>
-    <button class="menu-btn exit" onclick="openExit()">4. Exit</button>
+    <button class="menu-btn exit" onclick="openExit()">7. Exit</button>
   </div>
 
-  <!-- SEQUENCE SCREEN -->
+  <!-- ACTIVITY SCREEN -->
   <div id="seq-screen">
     <h2 id="seq-title"></h2>
-
     <div class="info-box" id="seq-info"></div>
 
-    <label id="input-label">Enter number of terms:</label>
-    <input type="number" id="num-input" min="1" placeholder="Enter a number">
+    <!-- Single-input activities -->
+    <div id="single-input-area">
+      <label id="input-label">Enter number of terms:</label>
+      <input type="number" id="num-input" min="1" placeholder="Enter a number">
+    </div>
+
+    <!-- Two-input activities -->
+    <div id="two-input-area" style="display:none;">
+      <div class="input-group">
+        <label id="label-a">First integer:</label>
+        <input type="number" id="input-a" min="1" placeholder="Enter first integer">
+      </div>
+      <div class="input-group">
+        <label id="label-b">Second integer:</label>
+        <input type="number" id="input-b" min="1" placeholder="Enter second integer">
+      </div>
+    </div>
+
     <div class="error" id="error-msg"></div>
 
     <div class="btn-row">
@@ -259,54 +312,173 @@
 </div>
 
 <script>
-  const sequences = {
+  const activities = {
+
+    /* ── RECURSIVE SEQUENCES ── */
     fib: {
       title: "Fibonacci Numbers",
+      type: "single",
       info: "The Fibonacci sequence is a series of numbers where each term is the sum of the two preceding terms. It was introduced by Italian mathematician Leonardo Fibonacci.<br><br><span class='formula'>Formula: F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub><br>Starting values: F<sub>0</sub> = 0, F<sub>1</sub> = 1</span>",
       minTerms: 3,
       hint: "Input must be greater than 2.",
-      generate(n) {
+      run(n) {
         let seq = [0, 1];
         for (let i = 2; i < n; i++) seq.push(seq[i-1] + seq[i-2]);
-        return seq.slice(0, n);
+        seq = seq.slice(0, n);
+        return {
+          label: "This program will find all the terms of the Fibonacci Numbers.",
+          output: "Input the number of terms: " + n + "\nThe Fibonacci Numbers are: " + seq.join(", ")
+        };
       }
     },
+
     luc: {
       title: "Lucas Numbers",
+      type: "single",
       info: "Lucas numbers follow the same recurrence rule as Fibonacci numbers but start with different values. They were named after French mathematician Edouard Lucas.<br><br><span class='formula'>Formula: L<sub>n</sub> = L<sub>n-1</sub> + L<sub>n-2</sub><br>Starting values: L<sub>0</sub> = 2, L<sub>1</sub> = 1</span>",
       minTerms: 3,
       hint: "Input must be greater than 2.",
-      generate(n) {
+      run(n) {
         let seq = [2, 1];
         for (let i = 2; i < n; i++) seq.push(seq[i-1] + seq[i-2]);
-        return seq.slice(0, n);
+        seq = seq.slice(0, n);
+        return {
+          label: "This program will find all the terms of the Lucas Numbers.",
+          output: "Input the number of terms: " + n + "\nThe Lucas Numbers are: " + seq.join(", ")
+        };
       }
     },
+
     tri: {
       title: "Tribonacci Numbers",
+      type: "single",
       info: "Tribonacci numbers are similar to Fibonacci but each term is the sum of the three preceding terms instead of two. The name comes from 'tri' meaning three.<br><br><span class='formula'>Formula: T<sub>n</sub> = T<sub>n-1</sub> + T<sub>n-2</sub> + T<sub>n-3</sub><br>Starting values: T<sub>0</sub> = 0, T<sub>1</sub> = 0, T<sub>2</sub> = 1</span>",
       minTerms: 4,
       hint: "Input must be greater than 3.",
-      generate(n) {
+      run(n) {
         let seq = [0, 0, 1];
         for (let i = 3; i < n; i++) seq.push(seq[i-1] + seq[i-2] + seq[i-3]);
-        return seq.slice(0, n);
+        seq = seq.slice(0, n);
+        return {
+          label: "This program will find all the terms of the Tribonacci Numbers.",
+          output: "Input the number of terms: " + n + "\nThe Tribonacci Numbers are: " + seq.join(", ")
+        };
+      }
+    },
+
+    /* ── NUMBER THEORY ── */
+    div: {
+      title: "Division Algorithm",
+      type: "two",
+      info: "The Division Algorithm states that for positive integers m and n, there exist unique non-negative integers q (quotient) and r (remainder) such that m = nq + r, where 0 ≤ r &lt; n. The higher integer is assigned as the dividend and the smaller as the divisor.<br><br><span class='formula'>Formula: m = n·q + r</span>",
+      run(a, b) {
+        const dividend = Math.max(a, b);
+        const divisor  = Math.min(a, b);
+        const q = Math.floor(dividend / divisor);
+        const r = dividend % divisor;
+
+        const lines = [
+          "SOLUTION:",
+          dividend + " = " + divisor + " (" + q + ") + " + r,
+          "",
+          "The dividend is " + dividend,
+          "The divisor is " + divisor,
+          "The quotient is " + q + " and the remainder is " + r
+        ];
+
+        return {
+          label: "Division Algorithm Result:",
+          output: lines.join("\n")
+        };
+      }
+    },
+
+    euc: {
+      title: "Euclidean Algorithm (GCD & LCM)",
+      type: "two",
+      info: "The Euclidean Algorithm finds the GCD of two integers by iterating the Division Algorithm until the remainder is zero. The last non-zero remainder is the GCD. The LCM is then found using the relationship between GCD and LCM.<br><br><span class='formula'>gcd(m, n) = last non-zero remainder<br>lcm(m, n) = (m · n) / gcd(m, n)</span>",
+      run(a, b) {
+        let m = Math.max(a, b);
+        let n = Math.min(a, b);
+        const origM = m, origN = n;
+
+        const steps = [];
+        while (n !== 0) {
+          const q = Math.floor(m / n);
+          const r = m % n;
+          if (r === 0) {
+            steps.push(m + " = " + n + " (" + q + ")");
+          } else {
+            steps.push(m + " = " + n + "(" + q + ") + " + r);
+          }
+          m = n;
+          n = r;
+        }
+        const gcd = m;
+        const lcm = (origM * origN) / gcd;
+
+        const lines = [
+          "SOLUTION:",
+          ...steps,
+          "",
+          "The integers are " + origM + " and " + origN,
+          "The greatest common divisor of " + origM + " and " + origN + " is " + gcd,
+          "The least common multiple of " + origM + " and " + origN + " is " + lcm + "."
+        ];
+
+        return {
+          label: "Euclidean Algorithm Result:",
+          output: lines.join("\n")
+        };
+      }
+    },
+
+    col: {
+      title: "Collatz Conjecture",
+      type: "single",
+      info: "The Collatz Conjecture (also called the 3n+1 problem) states that starting from any positive integer, repeatedly applying the rule below will always eventually reach 1. It remains unproven for all integers.<br><br><span class='formula'>If n is even: n = n / 2<br>If n is odd:  n = 3n + 1<br>Repeat until n = 1</span>",
+      minTerms: 2,
+      hint: "Input must be a positive integer greater than 1.",
+      run(n) {
+        const seq = [n];
+        let current = n;
+        while (current !== 1) {
+          current = current % 2 === 0 ? current / 2 : 3 * current + 1;
+          seq.push(current);
+        }
+        return {
+          label: "This program will compute the Collatz sequence.",
+          output: "Starting value: " + n +
+                  "\nNumber of steps to reach 1: " + (seq.length - 1) +
+                  "\nSequence: " + seq.join(", ")
+        };
       }
     }
   };
 
   let current = null;
 
-  function openSeq(key) {
+  function openActivity(key) {
     current = key;
-    const data = sequences[key];
+    const data = activities[key];
 
     document.getElementById('seq-title').textContent = data.title;
     document.getElementById('seq-info').innerHTML = data.info;
-    document.getElementById('input-label').textContent = "Enter number of terms: (" + data.hint + ")";
-    document.getElementById('num-input').value = '';
     document.getElementById('error-msg').style.display = 'none';
     document.getElementById('result-box').style.display = 'none';
+
+    const isSingle = data.type === "single";
+    document.getElementById('single-input-area').style.display = isSingle ? 'block' : 'none';
+    document.getElementById('two-input-area').style.display  = isSingle ? 'none' : 'block';
+
+    if (isSingle) {
+      document.getElementById('input-label').textContent =
+        "Enter number of terms: (" + data.hint + ")";
+      document.getElementById('num-input').value = '';
+    } else {
+      document.getElementById('input-a').value = '';
+      document.getElementById('input-b').value = '';
+    }
 
     document.getElementById('menu-screen').style.display = 'none';
     document.getElementById('exit-screen').style.display = 'none';
@@ -314,42 +486,67 @@
   }
 
   function compute() {
-    const data = sequences[current];
-    const raw = document.getElementById('num-input').value.trim();
-    const n = parseInt(raw);
+    const data = activities[current];
     const errEl = document.getElementById('error-msg');
-
     errEl.style.display = 'none';
     document.getElementById('result-box').style.display = 'none';
 
-    if (raw === '' || isNaN(n)) {
-      errEl.textContent = 'Please enter a number.';
-      errEl.style.display = 'block';
-      return;
-    }
-    if (n < data.minTerms) {
-      errEl.textContent = 'Invalid input. ' + data.hint;
-      errEl.style.display = 'block';
-      return;
-    }
-    if (n > 80) {
-      errEl.textContent = 'Please enter a value of 80 or less.';
-      errEl.style.display = 'block';
-      return;
+    let result;
+
+    if (data.type === 'single') {
+      const raw = document.getElementById('num-input').value.trim();
+      const n = parseInt(raw);
+
+      if (raw === '' || isNaN(n)) {
+        errEl.textContent = 'Please enter a number.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (n < data.minTerms) {
+        errEl.textContent = 'Invalid input. ' + data.hint;
+        errEl.style.display = 'block';
+        return;
+      }
+      if (current !== 'col' && n > 80) {
+        errEl.textContent = 'Please enter a value of 80 or less.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (current === 'col' && n > 100000) {
+        errEl.textContent = 'Please enter a value of 100,000 or less.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      result = data.run(n);
+
+    } else {
+      const rawA = document.getElementById('input-a').value.trim();
+      const rawB = document.getElementById('input-b').value.trim();
+      const a = parseInt(rawA);
+      const b = parseInt(rawB);
+
+      if (rawA === '' || isNaN(a) || rawB === '' || isNaN(b)) {
+        errEl.textContent = 'Please enter both integers.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (a < 1 || b < 1) {
+        errEl.textContent = 'Both integers must be positive (greater than 0).';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      result = data.run(a, b);
     }
 
-    const terms = data.generate(n);
-
-    document.getElementById('result-label').textContent =
-      'This program will find all the terms of the ' + data.title + '.';
-    document.getElementById('result-terms').textContent =
-      'Input the number of terms: ' + n + '\nThe ' + data.title + ' are: ' + terms.join(', ');
-
-    document.getElementById('result-box').style.display = 'block';
+    document.getElementById('result-label').textContent = result.label;
+    document.getElementById('result-terms').textContent  = result.output;
+    document.getElementById('result-box').style.display  = 'block';
   }
 
   function goBack() {
-    document.getElementById('seq-screen').style.display = 'none';
+    document.getElementById('seq-screen').style.display  = 'none';
     document.getElementById('exit-screen').style.display = 'none';
     document.getElementById('menu-screen').style.display = 'block';
     current = null;
