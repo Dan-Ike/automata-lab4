@@ -464,7 +464,7 @@
       <span class="num">02&nbsp;&nbsp;</span> Euclidean Algorithm (GCD &amp; LCM)
     </button>
     <button class="menu-btn" onclick="openActivity('col')">
-      <span class="num">03&nbsp;&nbsp;</span> Collatz Conjecture
+      <span class="num">03&nbsp;&nbsp;</span> Collatz Sequence
     </button>
     <button class="menu-btn" onclick="openActivity('fib')">
       <span class="num">04&nbsp;&nbsp;</span> Fibonacci Numbers
@@ -541,7 +541,7 @@
     div: {
       title: "Division Algorithm",
       type: "two",
-      info: "The Division Algorithm states that for positive integers m and n, there exist unique non-negative integers q (quotient) and r (remainder) such that m = nq + r, where 0 ≤ r &lt; n. The higher integer is assigned as the dividend and the smaller as the divisor.<br><br><span class='formula'>Formula: m = n·q + r</span>",
+      info: "The Division Algorithm states that for positive integers m and n, there exist unique non-negative integers q (quotient) obtained when m is divided by n and r (remainder) such that m = nq + r, where 0 ≤ r &lt; n. The higher integer is assigned as the dividend and the smaller as the divisor.<br><br><span class='formula'>Formula: m = n·q + r</span>",
       run(a, b) {
         const dividend = Math.max(a, b);
         const divisor  = Math.min(a, b);
@@ -575,12 +575,12 @@
           `  ${divisor} × ${q} = ${divisor * q}`,
           `  ${divisor * q} + ${r} = ${divisor * q + r} ✓`,
           "",
-          `∴ Quotient = ${q}, Remainder = ${r}`
+          `Quotient = ${q}, Remainder = ${r}`
         ].join("\n");
 
         const explain = r === 0
           ? `We divided ${dividend} by ${divisor} and found that it goes in evenly ${q} time${q!==1?'s':''} with no remainder left over. This means ${divisor} is a factor of ${dividend}, and the equation ${dividend} = ${divisor}×${q} + 0 holds perfectly.`
-          : `We divided ${dividend} by ${divisor}. The divisor fits into the dividend ${q} time${q!==1?'s':''}, accounting for ${divisor * q} in total. The leftover amount — the part that cannot be divided further — is the remainder ${r}. We confirm this by computing ${divisor} × ${q} = ${divisor * q}, and adding the remainder: ${divisor * q} + ${r} = ${dividend}. The Division Algorithm guarantees this breakdown is always possible and always unique.`;
+          : `We divided ${dividend} by ${divisor}. The divisor fits into the dividend ${q} time${q!==1?'s':''}, accounting for ${divisor * q} in total. The leftover amount the part that cannot be divided further is the remainder ${r}. We confirm this by computing ${divisor} × ${q} = ${divisor * q}, and adding the remainder: ${divisor * q} + ${r} = ${dividend}. The Division Algorithm guarantees this breakdown is always possible and always unique.`;
 
         return { label: "Division Algorithm Result", output, solution, explain };
       }
@@ -589,7 +589,7 @@
     euc: {
       title: "Euclidean Algorithm (GCD & LCM)",
       type: "two",
-      info: "The Euclidean Algorithm finds the GCD of two integers by iterating the Division Algorithm until the remainder is zero. The last non-zero remainder is the GCD. The LCM is then found using the relationship between GCD and LCM.<br><br><span class='formula'>gcd(m, n) = last non-zero remainder<br>lcm(m, n) = (m · n) / gcd(m, n)</span>",
+      info: "Let <b>m</b> and <b>n</b> be positive integers with n ≤ m. Let<br><br><span class='formula'>m = nq<sub>1</sub> + r<sub>1</sub><br>n = r<sub>1</sub>q<sub>2</sub> + r<sub>2</sub><br>r<sub>1</sub> = r<sub>2</sub>q<sub>3</sub> + r<sub>3</sub><br>...<br>r<sub>N-1</sub> = r<sub>N</sub>q<sub>N</sub></span><br><br>be the result of iterating the Division Algorithm, where r<sub>N</sub> is the last non-zero remainder. Then<br><br><span class='formula'>gcd(m,n) = r<sub>N</sub><br>lcm(m,n) = m·n / gcd(m,n)</span>",
       run(a, b) {
         let m = Math.max(a, b), n = Math.min(a, b);
         const origM = m, origN = n;
@@ -623,7 +623,7 @@
         const lcm = (origM * origN) / gcd;
 
         solutionLines.push(
-          `∴ GCD = ${gcd}`,
+          `GCD = ${gcd}`,
           "",
           `LCM: (${origM} × ${origN}) / ${gcd} = ${origM * origN} / ${gcd} = ${lcm}`
         );
@@ -636,16 +636,16 @@
           `LCM      : ${lcm}`
         ].join("\n");
 
-        const explain = `We repeatedly applied the Division Algorithm, each time replacing the dividend with the divisor and the divisor with the remainder. After ${step - 1} step${step-1!==1?'s':''}, the remainder became 0, meaning the previous divisor — ${gcd} — divides both ${origM} and ${origN} perfectly. That is the GCD. For the LCM, we used the relationship lcm(m, n) = (m × n) / gcd(m, n): multiplying ${origM} × ${origN} = ${origM * origN}, then dividing by ${gcd} gives LCM = ${lcm}. This approach is efficient even for very large numbers.`;
+        const explain = `We repeatedly applied the Division Algorithm, each time replacing the dividend with the divisor and the divisor with the remainder. After ${step - 1} step${step-1!==1?'s':''}, the remainder became 0, meaning the previous divisor ${gcd} divides both ${origM} and ${origN} perfectly. That is the GCD. For the LCM, we used the relationship lcm(m, n) = (m × n) / gcd(m, n): multiplying ${origM} × ${origN} = ${origM * origN}, then dividing by ${gcd} gives LCM = ${lcm}. This approach is efficient even for very large numbers.`;
 
         return { label: "Euclidean Algorithm Result", output, solution: solutionLines.join("\n"), explain };
       }
     },
 
     col: {
-      title: "Collatz Conjecture",
+      title: "Collatz Sequence",
       type: "single",
-      info: "The Collatz Conjecture states that starting from any positive integer, repeatedly applying the rule below will always eventually reach 1. It remains unproven for all integers.<br><br><span class='formula'>If n is even: n = n / 2<br>If n is odd:  n = 3n + 1<br>Repeat until n = 1</span>",
+      info: "The Collatz Sequence is generated by starting with any positive integer and repeatedly applying the rule below until reaching 1.<br><br><span class='formula'>If n is even: n = n / 2<br>If n is odd:  n = 3n + 1<br>Repeat until n = 1</span>",
       minTerms: 2,
       hint: "Input must be a positive integer greater than 1.",
       run(n) {
@@ -671,10 +671,10 @@
         solutionLines.push("", "Reached 1! Sequence terminates.");
 
         const maxVal = Math.max(...seq);
-        const explain = `Starting from ${n}, the Collatz rules were applied ${seq.length - 1} time${seq.length-1!==1?'s':''} before reaching 1. Along the way the sequence climbed as high as ${maxVal} before eventually falling back down to 1. The Collatz Conjecture claims this will happen for every positive integer — no matter how high or erratically the sequence bounces, it always ends at 1. Despite being simple to state and easy to test, mathematicians have never found a proof that this holds for all possible starting values.`;
+        const explain = `Starting from ${n}, the Collatz rules were applied ${seq.length - 1} time${seq.length-1!==1?'s':''} before reaching 1. Along the way the sequence climbed as high as ${maxVal} before eventually falling back down to 1. The Collatz Conjecture claims this will happen for every positive integer no matter how high or erratically the sequence bounces, it always ends at 1. Despite being simple to state and easy to test, mathematicians have never found a proof that this holds for all possible starting values.`;
 
         return {
-          label: "Collatz Conjecture Result",
+          label: "Collatz Sequence Result",
           output: `Starting value    : ${n}\nSteps to reach 1  : ${seq.length - 1}\nSequence          : ${seq.join(", ")}`,
           solution: solutionLines.join("\n"),
           explain
@@ -685,7 +685,7 @@
     fib: {
       title: "Fibonacci Numbers",
       type: "single",
-      info: "The Fibonacci sequence is a series of numbers where each term is the sum of the two preceding terms, introduced by Italian mathematician Leonardo Fibonacci.<br><br><span class='formula'>Formula: F(n) = F(n-1) + F(n-2)<br>Starting values: F(0) = 0, F(1) = 1</span>",
+      info: "The Fibonacci sequence is a series of numbers where each term is the sum of the two preceding terms, introduced by Italian mathematician Leonardo Fibonacci.<br><br><span class='formula'>F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub><br>Starting values: F<sub>0</sub> = 0, F<sub>1</sub> = 1<br>If n ≥ 2</span>",
       minTerms: 3,
       hint: "Input must be greater than 2.",
       run(n) {
@@ -697,7 +697,7 @@
           steps.push(`F(${i}) = ${seq[i-2]} + ${seq[i-1]} = ${val}`);
         }
         seq = seq.slice(0, n);
-        const explain = `Each term in the Fibonacci sequence is simply the sum of the two terms that came before it. Starting from 0 and 1, every new number grows by combining its two predecessors. This creates a rapidly increasing series (0, 1, 1, 2, 3, 5, 8, …) where the ratio between consecutive terms approaches the famous Golden Ratio (~1.618). Fibonacci numbers appear throughout nature — in spiral shells, flower petals, pine cones, and branching patterns — making this one of the most celebrated sequences in mathematics.`;
+        const explain = `Each term in the Fibonacci sequence is simply the sum of the two terms that came before it. Starting from 0 and 1, every new number grows by combining its two predecessors. This creates a rapidly increasing series (0, 1, 1, 2, 3, 5, 8, …) where the ratio between consecutive terms approaches the famous Golden Ratio (~1.618). Fibonacci numbers appear throughout nature in spiral shells, flower petals, pine cones, and branching patterns making this one of the most celebrated sequences in mathematics.`;
         return {
           label: "Fibonacci Numbers",
           output: `Number of terms    : ${n}\nFibonacci Numbers  : ${seq.join(", ")}`,
@@ -710,7 +710,7 @@
     luc: {
       title: "Lucas Numbers",
       type: "single",
-      info: "Lucas numbers follow the same recurrence as Fibonacci but start with different values. Named after French mathematician Édouard Lucas.<br><br><span class='formula'>Formula: L(n) = L(n-1) + L(n-2)<br>Starting values: L(0) = 2, L(1) = 1</span>",
+      info: "The Lucas Numbers L<sub>n</sub> have the initial values L<sub>0</sub> = 2, L<sub>1</sub> = 1<br><br><span class='formula'>L<sub>n</sub> = L<sub>n-1</sub> + L<sub>n-2</sub><br>If n ≥ 2</span>",
       minTerms: 3,
       hint: "Input must be greater than 2.",
       run(n) {
@@ -722,7 +722,7 @@
           steps.push(`L(${i}) = ${seq[i-2]} + ${seq[i-1]} = ${val}`);
         }
         seq = seq.slice(0, n);
-        const explain = `Lucas numbers use the exact same rule as Fibonacci — each term is the sum of the previous two — but they start from 2 and 1 instead of 0 and 1. This small difference in starting values produces a completely different sequence (2, 1, 3, 4, 7, 11, 18, …), yet the two sequences are deeply connected: each Lucas number equals the sum of the Fibonacci number two positions ahead and two positions behind it. Like Fibonacci, consecutive Lucas terms also approach the Golden Ratio as they grow.`;
+        const explain = `Lucas numbers use the exact same rule as Fibonacci each term is the sum of the previous two but they start from 2 and 1 instead of 0 and 1. This small difference in starting values produces a completely different sequence (2, 1, 3, 4, 7, 11, 18, …), yet the two sequences are deeply connected: each Lucas number equals the sum of the Fibonacci number two positions ahead and two positions behind it. Like Fibonacci, consecutive Lucas terms also approach the Golden Ratio as they grow.`;
         return {
           label: "Lucas Numbers",
           output: `Number of terms  : ${n}\nLucas Numbers    : ${seq.join(", ")}`,
@@ -735,7 +735,7 @@
     tri: {
       title: "Tribonacci Numbers",
       type: "single",
-      info: "Tribonacci numbers are like Fibonacci but each term is the sum of the three preceding terms. The name comes from 'tri' meaning three.<br><br><span class='formula'>Formula: T(n) = T(n-1) + T(n-2) + T(n-3)<br>Starting values: T(0) = 0, T(1) = 0, T(2) = 1</span>",
+      info: "The Tribonacci Numbers T<sub>n</sub> have the initial values T<sub>0</sub> = 0, T<sub>1</sub> = 0, T<sub>2</sub> = 1<br><br><span class='formula'>T<sub>n</sub> = T<sub>n-1</sub> + T<sub>n-2</sub> + T<sub>n-3</sub><br>If n ≥ 3</span>",
       minTerms: 4,
       hint: "Input must be greater than 3.",
       run(n) {
@@ -787,7 +787,7 @@
     document.getElementById('two-input-area').style.display   = isSingle ? 'none'  : 'block';
 
     if (isSingle) {
-      document.getElementById('input-label').textContent = `Number of terms — (${data.hint})`;
+      document.getElementById('input-label').textContent = `Number of terms (${data.hint})`;
       document.getElementById('num-input').value = '';
     } else {
       document.getElementById('input-a').value = '';
